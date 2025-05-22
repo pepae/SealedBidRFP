@@ -75,13 +75,13 @@ export async function connectWallet() {
     const network = await provider.getNetwork();
     console.log("Connected to network:", network);
 
-    // If needed, automatically switch to Gnosis chain
-    if (network.chainId !== 100) {
+    // If needed, automatically switch to Chiado chain
+    if (network.chainId !== 10200) {
       const gnosisChainParams = {
-        chainId: '0x64',
-        chainName: 'Gnosis Chain',
+        chainId: '0x27d8',
+        chainName: 'Chiado Chain',
         nativeCurrency: { name: 'XDAI', symbol: 'XDAI', decimals: 18 },
-        rpcUrls: ['https://rpc.gnosischain.com'],
+        rpcUrls: ['https://rpc.chiado.gnosis.gateway.fm'],
         blockExplorerUrls: ['https://gnosisscan.io']
       };
       try {
@@ -91,8 +91,8 @@ export async function connectWallet() {
         });
         provider = new ethers.providers.Web3Provider(window.ethereum);
       } catch (switchError) {
-        console.error("Failed to switch to Gnosis Chain:", switchError);
-        setStatus("Please connect to Gnosis Chain.");
+        console.error("Failed to switch to Chiado Chain:", switchError);
+        setStatus("Please connect to Chiado Chain.");
         return;
       }
     }
@@ -103,7 +103,7 @@ export async function connectWallet() {
     console.log("Loaded ABI:", CONTRACT_ABI);
     console.log("Contract available functions:", Object.keys(contract.functions));
 
-    setStatus("Wallet connected to Gnosis Chain!");
+    setStatus("Wallet connected to Chiado Chain!");
   } catch (err) {
     console.error("connectWallet error:", err);
     setStatus("Error connecting wallet; please refresh the page.");
@@ -569,8 +569,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     // Verify connection by detecting network
     const network = await publicRpcProvider.getNetwork();
-    if (network.chainId !== 100) {  // 100 is the Gnosis Chain ID
-      throw new Error(`RPC connected to wrong network (Chain ID: ${network.chainId}). Expected Gnosis (100).`);
+    if (network.chainId !== 10200) {  // 10200 is the Chiado Chain ID
+      throw new Error(`RPC connected to wrong network (Chain ID: ${network.chainId}). Expected Chiado (10200).`);
     }
     console.log("Read-only provider connected to network:", network);
     

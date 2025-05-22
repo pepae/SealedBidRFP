@@ -67,14 +67,14 @@ async function connectWallet() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
     provider = new ethers.providers.Web3Provider(window.ethereum);
     const network = await provider.getNetwork();
-    if (network.chainId !== 100) {
+    if (network.chainId !== 10200) {
       await window.ethereum.request({
         method: 'wallet_addEthereumChain',
         params: [{
-          chainId: '0x64',
-          chainName: 'Gnosis Chain',
+          chainId: '0x27d8',
+          chainName: 'Chiado Chain',
           nativeCurrency: { name: 'XDAI', symbol: 'XDAI', decimals: 18 },
-          rpcUrls: ['https://rpc.gnosischain.com'],
+          rpcUrls: ['https://rpc.chiado.gnosis.gateway.fm'],
           blockExplorerUrls: ['https://gnosisscan.io']
         }]
       });
@@ -82,7 +82,7 @@ async function connectWallet() {
     }
     signer = provider.getSigner();
     contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-    setStatus("Wallet connected to Gnosis Chain!");
+    setStatus("Wallet connected to Chiado Chain!");
   } catch (err) {
     console.error("connectWallet error:", err);
     setStatus("Error connecting wallet; please refresh the page.");

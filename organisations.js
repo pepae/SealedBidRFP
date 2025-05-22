@@ -46,10 +46,10 @@ async function initializeReadOnlyProvider(rpcUrl, contractAddress, contractAbi) 
         readOnlyProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
         // Verify connection
         const network = await readOnlyProvider.getNetwork();
-        if (network.chainId !== 100) { // Gnosis Chain ID
-           throw new Error(`RPC connected to wrong network (Chain ID: ${network.chainId}). Expected Gnosis (100).`);
+        if (network.chainId !== 10200) { // Chiado Chain ID
+           throw new Error(`RPC connected to wrong network (Chain ID: ${network.chainId}). Expected Chiado (10200).`);
         }
-        console.log("Read-only provider connected to Gnosis Chain via RPC.");
+        console.log("Read-only provider connected to Chiado Chain via RPC.");
         readOnlyContract = new ethers.Contract(contractAddress, contractAbi, readOnlyProvider);
         setStatus("Read connection successful. Ready to load organisations.");
         return true; // Indicate success
@@ -142,13 +142,13 @@ async function connectWalletOnLoad() {
           const network = await web3Provider.getNetwork();
           console.log("Connected network:", network);
 
-          if (network.chainId !== 100) { // Gnosis Chain ID
-              setStatus("Wallet connected. Please switch network to Gnosis Chain.");
-               // Attempt to switch/add Gnosis Chain
+          if (network.chainId !== 10200) { // Chiado Chain ID
+              setStatus("Wallet connected. Please switch network to Chiado Chain.");
+               // Attempt to switch/add Chiado Chain
               try {
                    const gnosisChainParams = {
-                       chainId: '0x64', // 100
-                       chainName: 'Gnosis Chain',
+                       chainId: '0x27d8', // 10200
+                       chainName: 'Chiado Chain',
                        nativeCurrency: { name: 'XDAI', symbol: 'XDAI', decimals: 18 },
                        rpcUrls: [GNOSIS_RPC_URL], // Use RPC from config
                        blockExplorerUrls: ['https://gnosisscan.io']
@@ -157,16 +157,16 @@ async function connectWalletOnLoad() {
                    // Re-initialize provider and check network again
                    web3Provider = new ethers.providers.Web3Provider(window.ethereum);
                    const updatedNetwork = await web3Provider.getNetwork();
-                    if (updatedNetwork.chainId !== 100) {
-                        throw new Error("Failed to switch to Gnosis Chain after request.");
+                    if (updatedNetwork.chainId !== 10200) {
+                        throw new Error("Failed to switch to Chiado Chain after request.");
                     }
-                    console.log("Switched to Gnosis Chain successfully.");
+                    console.log("Switched to Chiado Chain successfully.");
                     // Re-fetch signer after network switch potentially needed
                     signer = web3Provider.getSigner();
 
               } catch (switchError) {
-                   console.error("Failed to switch/add Gnosis Chain:", switchError);
-                   setStatus("Failed to switch to Gnosis Chain. Please do it manually in MetaMask.");
+                   console.error("Failed to switch/add Chiado Chain:", switchError);
+                   setStatus("Failed to switch to Chiado Chain. Please do it manually in MetaMask.");
                    disableInteraction(true); // Disable interaction if on wrong network
                    return; // Stop connection process if network is wrong
               }
@@ -181,7 +181,7 @@ async function connectWalletOnLoad() {
           // Create writable contract instance
           writeContract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-          setStatus(`Wallet connected: ${address.substring(0, 6)}... on Gnosis Chain`);
+          setStatus(`Wallet connected: ${address.substring(0, 6)}... on Chiado Chain`);
           disableInteraction(false); // Enable interaction for adding org
 
           // Listen for account changes
@@ -217,10 +217,10 @@ async function connectWalletOnLoad() {
 async function createOrganization() {
     // Ensure wallet is connected and writable contract exists
     if (!signer || !writeContract) {
-        setStatus("Wallet not connected or not on Gnosis Chain. Please connect/switch in MetaMask.");
+        setStatus("Wallet not connected or not on Chiado Chain. Please connect/switch in MetaMask.");
         // Optionally trigger a connection attempt again here or alert user
         // await connectWalletOnLoad(); // Re-attempt connection? Might be intrusive.
-         alert("Please ensure your wallet is connected to the Gnosis Chain.");
+         alert("Please ensure your wallet is connected to the Chiado Chain.");
         return;
     }
 
@@ -253,10 +253,10 @@ async function createOrganization() {
          if(signer && writeContract) {
             // Verify network again before re-enabling? Optional paranoia.
             const currentNetwork = await web3Provider.getNetwork();
-            if (currentNetwork.chainId === 100) {
+            if (currentNetwork.chainId === 10200) {
                  disableInteraction(false);
             } else {
-                 setStatus("Wallet connected, but please switch back to Gnosis Chain.");
+                 setStatus("Wallet connected, but please switch back to Chiado Chain.");
                  disableInteraction(true);
             }
          } else {
